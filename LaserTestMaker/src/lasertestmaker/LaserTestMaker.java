@@ -26,7 +26,7 @@ public class LaserTestMaker {
         this.X_MV = 0;
         this.Y_MV = 5;
         this.Z_MV = 0.25;
-        this.F_MV = 1500;
+        this.F_MV = 3000;
         this.Laser_line_width = 30;
         
     }
