@@ -42,7 +42,7 @@ public class LaserTestMaker {
     
     String mainScript(){
         double x = 0, y = 0 ,z = 0;
-        String main = "";
+        
         StringBuilder sb = new StringBuilder();
         sb.append("          ;メインスタート\n ");
         sb.append("G0 F" + F_MV + "\n ");
@@ -59,12 +59,12 @@ public class LaserTestMaker {
             sb.append("G0 " + "X" + x + " Y" + y + " Z" + z + ";Y移動\n ");
         }
         sb.append("\n          ;メインここまで");
-        return main = sb.toString();
+        return sb.toString();
     }
     
     String headerScript(){
         String header = 
-                GCODE_LASER_OFF + "M107 S0   ;M107ファン(レーザー)の電源を切るコマンド S〜 出力0〜255\n" +
+                GCODE_LASER_OFF + " S0   ;M107ファン(レーザー)の電源を切るコマンド S〜 出力0〜255\n" +
                 "\n" +
                 "G90       ;座標を絶対値指定へ変更\n" +
                 "G21       ;単位を㎜に設定するコマンド\n";
