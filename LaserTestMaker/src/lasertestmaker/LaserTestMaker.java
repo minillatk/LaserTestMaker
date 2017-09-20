@@ -10,8 +10,8 @@ package lasertestmaker;
  * @author minillatk
  */
 public class LaserTestMaker {
-    public final String GCODE_LASER_ON = "M106"; //レーザーONのG-code命令
-    public final String GCODE_LASER_OFF = "M107"; //レーザーOFFのG-code命令
+    public final String GCODE_LASER_ON = "M3";//"M106"; //レーザーONのG-code命令
+    public final String GCODE_LASER_OFF = "M3"; //レーザーOFFのG-code命令
     public int laser_power; //レーザーの出力0-255 標準出力8W=136 (＊最高出力15W=255 使用不可)
     public double X_default, Y_default, Z_default;  //デフォルト値
     public double X_MV, Y_MV, Z_MV, F_MV; //移動量 例＞10 = 10mm間隔で移動
@@ -19,14 +19,14 @@ public class LaserTestMaker {
     
     
     LaserTestMaker(){ //コンストラクタ
-        this.laser_power = 136;
+        this.laser_power = 255;
         this.X_default = 0;
         this.Y_default = 0;
         this.Z_default = 0;
         this.X_MV = 0;
         this.Y_MV = 5;
         this.Z_MV = 0.25;
-        this.F_MV = 3000;
+        this.F_MV = 500;
         this.Laser_line_width = 30;
         
     }
@@ -53,7 +53,7 @@ public class LaserTestMaker {
             x += Laser_line_width;
             sb.append("G0 " + "X" + x + " Y" + y + ";out\n ");
             x -= Laser_line_width;
-            sb.append(GCODE_LASER_OFF + " S0        ;レーザーOFF\n ");
+            sb.append(GCODE_LASER_OFF + " S1        ;レーザーOFF\n ");
             y += this.Y_MV;
             z += this.Z_MV;
             sb.append("G0 " + "X" + x + " Y" + y + " Z" + z + ";Y移動\n ");
@@ -64,7 +64,7 @@ public class LaserTestMaker {
     
     String headerScript(){
         String header = 
-                GCODE_LASER_OFF + " S0   ;M107ファン(レーザー)の電源を切るコマンド S〜 出力0〜255\n" +
+                GCODE_LASER_OFF + " S1   ;M107ファン(レーザー)の電源を切るコマンド S〜 出力0〜255\n" +
                 "\n" +
                 "G90       ;座標を絶対値指定へ変更\n" +
                 "G21       ;単位を㎜に設定するコマンド\n";
@@ -72,9 +72,9 @@ public class LaserTestMaker {
     }
     String footerScript(){
         String footer = 
-                GCODE_LASER_OFF + " S0\n" +
+                GCODE_LASER_OFF + " S1\n" +
                 "G0 F3000\n" +
-                "G0 X0 Y0 Z10\n" +
+                "G0 X0 Y0 Z0\n" +
                 "M18        ;すべてのステッパーモーターの電源をオフまたは回転をオフ（すべてのステッパーモーターを無効にする）";
     return footer;
     }
