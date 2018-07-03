@@ -5,8 +5,6 @@
  */
 package lasertestmaker;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -16,15 +14,25 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author kimuratadashi
+ * @author minillatk
  */
 public class FileEditer {
+    
+    public static String fileFirstName, fileExtention;
+    
+    FileEditer(){
+        FileEditer.fileFirstName="laser";
+        FileEditer.fileExtention=".gcode";
+    }
+    
+    FileEditer(String first,String extention){
+        FileEditer.fileFirstName = first;
+        FileEditer.fileExtention = extention;
+    }
 
     public void save(String textdata) {
-        String FILE_NAME;
-        FILE_NAME = getTime();
-
-        try (FileWriter FW = new FileWriter("laser" + FILE_NAME + ".gcode", true);) {
+        
+        try (FileWriter FW = new FileWriter("laser" + (getTime()) + ".gcode", true);) {
             FW.write(textdata);
         } catch (IOException ex) {
             Logger.getLogger(FileEditer.class.getName()).
