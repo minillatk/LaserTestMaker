@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author kimuratadashi
+ * @author minillatk
  */
 public class FileEditer {
 
