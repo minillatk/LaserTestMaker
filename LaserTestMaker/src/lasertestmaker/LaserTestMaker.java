@@ -17,6 +17,7 @@ public class LaserTestMaker {
     public double X_MV, Y_MV, Z_MV, F_MV; //移動量 例＞10 = 10mm間隔で移動
     public double Laser_F_MV; //レーザー出力時の移動量
     public double Laser_line_width;//レーザーで焼き付ける線の長さ
+    public int line_repeat;//レーザーで描く線の数
     
     
     LaserTestMaker(){ //コンストラクタ
@@ -30,6 +31,7 @@ public class LaserTestMaker {
         this.F_MV = 1200;
         this.Laser_F_MV = 500;
         this.Laser_line_width = 30;
+        this.line_repeat = 10;
         
     }
     /**
@@ -37,31 +39,34 @@ public class LaserTestMaker {
      */
     public static void main(String[] args) {
         LaserTestMaker LTM = new LaserTestMaker();//staticであるmainからstaticでないメソッドなどを使う場合はnewする。
-        System.out.println(LTM.headerScript());
-        System.out.println(LTM.mainScript());
-        System.out.println(LTM.footerScript());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(LTM.headerScript()).append(LTM.mainScript()).append(LTM.footerScript());
+        System.out.println(sb.toString());
+        FileEditer fileEditer = new FileEditer();
+        fileEditer.save(sb.toString());//データsb.toStoring()をセーブ
     }
     
     String mainScript(){
         double x = 0, y = 0 ,z = 0;
         
         StringBuilder sb = new StringBuilder();
-        sb.append("          ;メインスタート\n ");
-        sb.append(GCODE_LASER_ON + " S" + this.laser_power + "      ;レーザーON\n ");
-        sb.append("G0 F" + F_MV + "\n ");
-        sb.append("G0 " + "X" + this.X_default + " Y" + this.Y_default + "\n ");
+        sb.append("          ;メインスタート\n");
+        sb.append(GCODE_LASER_ON + " S" + this.laser_power + "      ;レーザーON\n");
+        sb.append("G0 F" + F_MV + "\n");
+        sb.append("G0 " + "X" + this.X_default + " Y" + this.Y_default + "\n");
         
-        for(int i=0 ;i<10;i++){
-            sb.append("G1 " + "X" + x + " Y" + y + " F" + Laser_F_MV + ";in\n ");
+        for(int i=0; i<line_repeat; i++){
+            sb.append("G1 " + "X" + x + " Y" + y + " F" + Laser_F_MV + ";in\n");
             x += Laser_line_width;
-            sb.append("G1 " + "X" + x + " Y" + y + " F" + Laser_F_MV + ";out\n ");
+            sb.append("G1 " + "X" + x + " Y" + y + " F" + Laser_F_MV + ";out\n");
             x -= Laser_line_width;
             y += this.Y_MV;
             z += this.Z_MV;
-            sb.append("G0 " + "X" + x + " Y" + y + " Z" + z + ";Y移動\n ");
+            sb.append("G0 " + "X" + x + " Y" + y + " Z" + z + ";Y移動\n");
         }
 
-        sb.append("\n          ;メインここまで");
+        sb.append("\n          ;メインここまで\n");
         return sb.toString();
     }
     
