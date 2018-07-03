@@ -10,8 +10,8 @@ package lasertestmaker;
  * @author minillatk
  */
 public class LaserTestMaker {
-    public final String GCODE_LASER_ON = "M106"; //レーザーONのG-code命令
-    public final String GCODE_LASER_OFF = "M107"; //レーザーOFFのG-code命令
+    public final String GCODE_LASER_ON; //レーザーONのG-code命令 "M106"
+    public final String GCODE_LASER_OFF; //レーザーOFFのG-code命令 "M107"
     public int laser_power; //レーザーの出力0-255 標準出力8W=136 (＊最高出力15W=255 使用不可)
     public double X_default, Y_default, Z_default;  //デフォルト値
     public double X_MV, Y_MV, Z_MV, F_MV; //移動量 例＞10 = 10mm間隔で移動
@@ -19,13 +19,15 @@ public class LaserTestMaker {
     
     
     LaserTestMaker(){ //コンストラクタ
-        this.laser_power = 136;
+        this.GCODE_LASER_ON = "M04";
+        this.GCODE_LASER_OFF = "M05";
+        this.laser_power = 512;
         this.X_default = 0;
         this.Y_default = 0;
         this.Z_default = 0;
         this.X_MV = 0;
         this.Y_MV = 5;
-        this.Z_MV = 0.25;
+        this.Z_MV = 0.25;//0.25;
         this.F_MV = 1500;
         this.Laser_line_width = 30;
         
@@ -48,7 +50,7 @@ public class LaserTestMaker {
         sb.append("G0 F" + F_MV + "\n ");
         sb.append("G0 " + "X" + this.X_default + " Y" + this.Y_default + "\n ");
         for(int i=0 ;i<10;i++){
-            sb.append(GCODE_LASER_ON + " S" + this.laser_power + "      ;レーザーON\n ");
+            sb.append(GCODE_LASER_ON + " S" + this.laser_power + "      ;レーザーON:" + (i+1) + "回目\n ");
             sb.append("G0 " + "X" + x + " Y" + y + ";in\n ");
             x += Laser_line_width;
             sb.append("G0 " + "X" + x + " Y" + y + ";out\n ");
@@ -64,7 +66,7 @@ public class LaserTestMaker {
     
     String headerScript(){
         String header = 
-                GCODE_LASER_OFF + " S0   ;M107ファン(レーザー)の電源を切るコマンド S〜 出力0〜255\n" +
+                GCODE_LASER_OFF + " S0   ;M107ファン(レーザー)もしくはM05(スピンドル制御)の電源を切るコマンド S〜 出力0〜255\n" +
                 "\n" +
                 "G90       ;座標を絶対値指定へ変更\n" +
                 "G21       ;単位を㎜に設定するコマンド\n";
@@ -74,7 +76,7 @@ public class LaserTestMaker {
         String footer = 
                 GCODE_LASER_OFF + " S0\n" +
                 "G0 F3000\n" +
-                "G0 X0 Y0 Z10\n" +
+                "G0 X0 Y0 Z0\n" +
                 "M18        ;すべてのステッパーモーターの電源をオフまたは回転をオフ（すべてのステッパーモーターを無効にする）";
     return footer;
     }
